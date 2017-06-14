@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>websocket</title>
+</head>
+
+<body>
+    <div>
+        <button id='send'> 发送</button>
+    </div>
+</body>
+<script>
+// var socket = new WebSocket('ws://121.248.49.232:9000');
+var url = "ws://121.248.49.232:9000";
+//兼容 FireFox
+if ("WebSocket" in window) {
+    socket = new WebSocket(url);
+} else if ("MozWebSocket" in window) {
+    socket = new MozWebSocket(url);
+}
+socket.onopen = function(event) {
+    console.log("connected");
+    socket.send("client say hello\n");
+    alert('连接');
+};
+socket.onmessage = function(event) {//当客户端收到服务端发来的消息时，会触发onmessage事件，参数event.data中包含server传输过来的数据
+    var content = event.data;//获取消息
+    console.log(content);
+    if (content.length > 0) {
+        alert("server said"+content);
+    }
+};
+socket.onclose = function(evt)
+{
+  console.log("WebSocketClosed!");
+};
+socket.onerror = function(evt)
+{
+  console.log("WebSocketError!");
+};
+var send = document.getElementById('send');
+send.addEventListener('click', function() {
+    var content = 'client sent\n';
+    console.log(content);
+    socket.send(content);
+    alert('发送');
+});
+</script>
+</html>
